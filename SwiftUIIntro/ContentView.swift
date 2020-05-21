@@ -8,6 +8,8 @@
 
 import SwiftUI
 
+// MARK:- Rules
+
 /*
  Rules:
  - Order of modifiers are hugely important
@@ -19,54 +21,67 @@ import SwiftUI
 - Add Spacer to display UI on full space then use offsets to position it
  - Spacing bewteen elements in a stack can be defined by Stack(spacing: value)
  
-
  */
 
+// MARK:- Content
 struct ContentView: View {
+    
+    // MARK:- States
+    @State var show = false
+    
+    //MARK:- Body
     var body: some View {
         ZStack {
             
             /// Adding it a in HStack will facilitate layout
             /// This will push the text to the top
             TitleView()
-                .blur(radius: 20)
+                .blur(radius: show ? 20 : 0)
+                .animation(.default) // looks like easeInOut ~).4
             
             BackCardView()
-                .background(Color("card4"))
+                .background(show ? Color("card3") : Color("card4"))
                 .cornerRadius(20)
                 .shadow(radius: 20)
-                .offset(x: 0, y: -40)
+                .offset(x: 0, y: show ? -400 : -40)
                 .scaleEffect(0.9)
-                .rotationEffect(.degrees(10))
+                .rotationEffect(.degrees(show ? 0 : 10))
                 .rotation3DEffect(.degrees(10), axis: (x: 10.0, y: 0, z: 0)) /// setting an axis to 0 will skip the degrees rotation effect for that axis
                 .blendMode(.hardLight)
+                .animation(.easeIn(duration: 0.5))
             
             BackCardView()
-                .background(Color("card3"))
+                .background(show ? Color("card4") : Color("card3"))
                 .cornerRadius(20)
                 .shadow(radius: 20)
-                .offset(x: 0, y: -20)
+                .offset(x: 0, y: show ? -200 : -20)
                 .scaleEffect(0.95)
-                .rotationEffect(.degrees(5))
+                .rotationEffect(.degrees(show ? 0 : 5))
                 .rotation3DEffect(.degrees(5), axis: (x: 10.0, y: 0, z: 0)) /// setting an axis to 0 will skip the degrees rotation effect for that axis
                 .blendMode(.hardLight)
+                .animation(.easeIn(duration: 0.3))
             
             CardView()
                 .blendMode(.hardLight)
+                .onTapGesture {
+                    self.show.toggle() // swift 3? maybe this is gone?
+            }
             
             BottomCardView()
-                .blur(radius: 20)
-            
+                .blur(radius: show ? 20 : 0)
+                .animation(.default)
         }
     }
 }
 
+// MARK:- Preview Provider
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView()
     }
 }
 
+// MARK:- Components
 struct CardView: View {
     var body: some View {
         VStack {
@@ -103,8 +118,6 @@ struct BackCardView: View {
             .frame(width: 340.0, height: 220.0)
     }
 }
-
-/// Modyfiers should not be part of the component.
 
 struct TitleView: View {
     var body: some View {
