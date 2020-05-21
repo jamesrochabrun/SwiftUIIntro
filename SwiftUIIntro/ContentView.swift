@@ -20,7 +20,9 @@ import SwiftUI
  - always add the padding before the backgorund
 - Add Spacer to display UI on full space then use offsets to position it
  - Spacing bewteen elements in a stack can be defined by Stack(spacing: value)
- 
+ -  when animating the order is very important also, start with the offset and animation if a translation is needed.
+ - you can repeat modifyiers!
+ - you can modify different states at the same time and will perform the action
  */
 
 // MARK:- Content
@@ -28,6 +30,7 @@ struct ContentView: View {
     
     // MARK:- States
     @State var show = false
+    @State var viewState: CGSize = .zero
     
     //MARK:- Body
     var body: some View {
@@ -44,6 +47,7 @@ struct ContentView: View {
                 .cornerRadius(20)
                 .shadow(radius: 20)
                 .offset(x: 0, y: show ? -400 : -40)
+                .offset(x: viewState.width, y: viewState.height)
                 .scaleEffect(0.9)
                 .rotationEffect(.degrees(show ? 0 : 10))
                 .rotation3DEffect(.degrees(10), axis: (x: 10.0, y: 0, z: 0)) /// setting an axis to 0 will skip the degrees rotation effect for that axis
@@ -55,6 +59,7 @@ struct ContentView: View {
                 .cornerRadius(20)
                 .shadow(radius: 20)
                 .offset(x: 0, y: show ? -200 : -20)
+                .offset(x: viewState.width, y: viewState.height)
                 .scaleEffect(0.95)
                 .rotationEffect(.degrees(show ? 0 : 5))
                 .rotation3DEffect(.degrees(5), axis: (x: 10.0, y: 0, z: 0)) /// setting an axis to 0 will skip the degrees rotation effect for that axis
@@ -62,10 +67,28 @@ struct ContentView: View {
                 .animation(.easeIn(duration: 0.3))
             
             CardView()
+                .offset(x: viewState.width, y: viewState.height) /// adding this modifyier before to avoid lag in animation when dragging
+                /**
+                 - response: less is less lag
+                 - dampingFraction: resistance bigger number less bounce
+                 - blendDuration: transition between animation cues.
+                 */
+                .animation(.spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0))
                 .blendMode(.hardLight)
                 .onTapGesture {
-                    self.show.toggle() // swift 3? maybe this is gone?
+                    self.show.toggle() // swift 3? maybe implicit self is gone?
             }
+            .gesture(
+                DragGesture().onChanged { value in
+                    /// Modifying multiple states is possible!
+                    self.viewState = value.translation
+                    self.show = true
+                }
+                .onEnded { _ in
+                    self.viewState = .zero
+                    self.show = false
+                }
+            )
             
             BottomCardView()
                 .blur(radius: show ? 20 : 0)
