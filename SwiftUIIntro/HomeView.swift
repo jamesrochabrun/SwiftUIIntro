@@ -12,6 +12,8 @@
  
  - Swift ui always takes the minimum size algins everything to the largest content for example to the image.
  - when using scrollviews: the scrolliview direction does not define the layout , you need to deifne it using a H or V stack
+ 
+  Double(geometry.frame(in: .global).minX) means :: gets the frame value of the card = self.view.frame.minX
  */
 
 import SwiftUI
@@ -36,7 +38,13 @@ struct HomeView: View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 30) {
                     ForEach(sectionData) { item in
-                        SectionView(section: item)
+                        GeometryReader { geometry in
+                            SectionView(section: item)
+                                /// One cool trick to avoid the rotation in the first card is substracting the spacing hard coded value that comes from the padding
+                                .rotation3DEffect(Angle(degrees: Double(geometry.frame(in: .global).minX - 30) / -20), /// negative or positive changes the animation
+                                                        axis: (x: 0, y: 10.0, z: 0)) // setting the axis values to 0 disables the movement in that angle
+                        }
+                        .frame(width: 275, height: 275)
                     }
                 }
                 .padding(30)
