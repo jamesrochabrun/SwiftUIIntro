@@ -17,6 +17,9 @@ import SwiftUI
  - .background(Color.black.opacity(0.001)) 0r .background(Color.clear) setting it to 0 will make it not interactive
  - the animtion modifyiers does not go chained to the festure but to the list of modifyiers of the view.
  - view state height can be used to apply in corner radius, opacity etc.
+ - passign states trough components:
+    1 - create a Binding variable in the component
+    2 -  pass the state to the binding prefixing with $
  */
 
 struct Home: View {
@@ -31,26 +34,8 @@ struct Home: View {
             Color(#colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1))
             /// Disabling safe arears
                 .edgesIgnoringSafeArea(.all)
-                        
-            VStack {
-                HStack {
-                    Text("Watching")
-                        .font(.system(size: 28, weight: .bold))
-                    Spacer()
-                    Button(action: {
-                        self.showProfile.toggle()
-                    }) {
-                        Image("Avatar") // can be a text also
-                            .renderingMode(.original)
-                            .resizable()
-                            .frame(width: 36, height: 36)
-                            .clipShape(Circle())
-                    }
-                }
-                .padding(.horizontal)
-                .padding(.top, 30)
-                Spacer()
-            }
+            
+          HomeView(showProfile: $showProfile)
                 .padding(.top, 44) /// 44 is been used here as the status bar height. ?? not cool will be a problem in iphone 8 with no notches.
                 .background(Color.white)
                 .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
@@ -66,7 +51,7 @@ struct Home: View {
             MenuView()
                 .background(Color.black.opacity(0.001)) // kind of user interaction enabled?
                 
-                .offset(y: showProfile ? 0 : 1000)
+                .offset(y: showProfile ? 0 : screen.height)
                 .offset(y: viewState.height) // allows dragging listens to the drag change
                 .animation(.spring(response: 0.5, dampingFraction: 0.6, blendDuration: 0)) // you add the animation chaining the modifyiers
                 .onTapGesture {
@@ -93,3 +78,23 @@ struct Home_Previews: PreviewProvider {
         Home()
     }
 }
+
+struct AvatarView: View {
+    
+    @Binding var showProfile: Bool
+    
+    var body: some View {
+        Button(action: {
+            self.showProfile.toggle()
+        }) {
+            Image("Avatar") // can be a text also
+                .renderingMode(.original)
+                .resizable()
+                .frame(width: 36, height: 36)
+                .clipShape(Circle())
+        }
+    }
+}
+
+// MARK:- Global 
+let screen = UIScreen.main.bounds
