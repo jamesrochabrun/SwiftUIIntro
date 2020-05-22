@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7B10A86F2478418E005B41ED /* MenuView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B10A86E2478418E005B41ED /* MenuView.swift */; };
+		7B10A871247864A9005B41ED /* Home.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B10A870247864A9005B41ED /* Home.swift */; };
 		7BD6E50D2474984B00852A3D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD6E50C2474984B00852A3D /* AppDelegate.swift */; };
 		7BD6E50F2474984B00852A3D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD6E50E2474984B00852A3D /* SceneDelegate.swift */; };
 		7BD6E5112474984B00852A3D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BD6E5102474984B00852A3D /* ContentView.swift */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		7B10A86E2478418E005B41ED /* MenuView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuView.swift; sourceTree = "<group>"; };
+		7B10A870247864A9005B41ED /* Home.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Home.swift; sourceTree = "<group>"; };
 		7BD6E5092474984B00852A3D /* SwiftUIIntro.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIIntro.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7BD6E50C2474984B00852A3D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7BD6E50E2474984B00852A3D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -104,6 +106,7 @@
 				7BD6E50C2474984B00852A3D /* AppDelegate.swift */,
 				7BD6E50E2474984B00852A3D /* SceneDelegate.swift */,
 				7BD6E5102474984B00852A3D /* ContentView.swift */,
+				7B10A870247864A9005B41ED /* Home.swift */,
 				7B10A86E2478418E005B41ED /* MenuView.swift */,
 				7BD6E5122474985400852A3D /* Assets.xcassets */,
 				7BD6E5172474985400852A3D /* LaunchScreen.storyboard */,
@@ -272,6 +275,7 @@
 			files = (
 				7BD6E50D2474984B00852A3D /* AppDelegate.swift in Sources */,
 				7B10A86F2478418E005B41ED /* MenuView.swift in Sources */,
+				7B10A871247864A9005B41ED /* Home.swift in Sources */,
 				7BD6E50F2474984B00852A3D /* SceneDelegate.swift in Sources */,
 				7BD6E5112474984B00852A3D /* ContentView.swift in Sources */,
 			);
