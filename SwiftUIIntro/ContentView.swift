@@ -31,6 +31,8 @@ struct ContentView: View {
     // MARK:- States
     @State var show = false
     @State var viewState: CGSize = .zero
+    @State var showCard = false
+
     
     //MARK:- Body
     var body: some View {
@@ -40,43 +42,66 @@ struct ContentView: View {
             /// This will push the text to the top
             TitleView()
                 .blur(radius: show ? 20 : 0)
-                .animation(.default) // looks like easeInOut ~).4
+                .opacity(showCard ? 0.4 : 1)
+                .offset(y: showCard ? -200 : 0)
+                .animation(
+                    Animation
+                        .default
+                        .delay(0.1)
+                      //  .speed(2)
+                       // .repeatCount(3)
+            ) // default looks like easeInOut ~).4
             
             BackCardView()
+                /// Orde of modifyiersr is very imporant!
+                .frame(width: showCard ? 300 : 340.0, height: 220.0)
                 .background(show ? Color("card3") : Color("card4"))
                 .cornerRadius(20)
                 .shadow(radius: 20)
                 .offset(x: 0, y: show ? -400 : -40)
                 .offset(x: viewState.width, y: viewState.height)
-                .scaleEffect(0.9)
+                .offset(y: showCard ? -180 : 0)
+                .scaleEffect(showCard ? 1 : 0.9)
                 .rotationEffect(.degrees(show ? 0 : 10))
-                .rotation3DEffect(.degrees(10), axis: (x: 10.0, y: 0, z: 0)) /// setting an axis to 0 will skip the degrees rotation effect for that axis
+                .rotationEffect(.degrees(showCard ? -10 : 0)) // avoiding rotation in show card
+                .rotation3DEffect(.degrees(showCard ? 0 : 10), axis: (x: 10.0, y: 0, z: 0)) /// setting an axis to 0 will skip the degrees rotation effect for that axis
                 .blendMode(.hardLight)
                 .animation(.easeIn(duration: 0.5))
             
             BackCardView()
+                .frame(width: 340.0, height: 220.0)
                 .background(show ? Color("card4") : Color("card3"))
                 .cornerRadius(20)
                 .shadow(radius: 20)
                 .offset(x: 0, y: show ? -200 : -20)
                 .offset(x: viewState.width, y: viewState.height)
-                .scaleEffect(0.95)
+                .offset(y: showCard ? -140 : 0)
+                .scaleEffect(showCard ? 1 : 0.95) // resetting the scale
                 .rotationEffect(.degrees(show ? 0 : 5))
-                .rotation3DEffect(.degrees(5), axis: (x: 10.0, y: 0, z: 0)) /// setting an axis to 0 will skip the degrees rotation effect for that axis
+                  .rotationEffect(.degrees(showCard ? -5 : 0)) // avoiding rotation in show card
+                .rotation3DEffect(.degrees(showCard ? 0 : 5), axis: (x: 10.0, y: 0, z: 0)) /// setting an axis to 0 will skip the degrees rotation effect for that axis
                 .blendMode(.hardLight)
                 .animation(.easeIn(duration: 0.3))
             
             CardView()
+                .padding(.horizontal, 20) //default recommended of 16
+                .padding(.top, 20)
+                .frame(width: showCard ? 375 : 340.0, height: 220.0)
+                .background(Color.black)
+//                .cornerRadius(20)
+                .clipShape(RoundedRectangle(cornerRadius: showCard ? 30 : 20, style: .continuous)) // smoot corners
+                .shadow(radius: 20)
                 .offset(x: viewState.width, y: viewState.height) /// adding this modifyier before to avoid lag in animation when dragging
+                .offset(y: showCard ? -100 : 0)
                 /**
                  - response: less is less lag
                  - dampingFraction: resistance bigger number less bounce
                  - blendDuration: transition between animation cues.
                  */
-                .animation(.spring(response: 0.3, dampingFraction: 0.6, blendDuration: 0))
+                .animation(.spring(response: 0.2, dampingFraction: 0.9, blendDuration: 0))
                 .blendMode(.hardLight)
                 .onTapGesture {
-                    self.show.toggle() // swift 3? maybe implicit self is gone?
+                    self.showCard.toggle() // swift 3? maybe implicit self is gone?
             }
             .gesture(
                 DragGesture().onChanged { value in
@@ -91,8 +116,9 @@ struct ContentView: View {
             )
             
             BottomCardView()
+                .offset(x: 0, y: showCard ? 360 : 1000)
                 .blur(radius: show ? 20 : 0)
-                .animation(.default)
+                .animation(.timingCurve(0.2, 0.8, 0.2, 1, duration: 0.8))
         }
     }
 }
@@ -123,12 +149,6 @@ struct CardView: View {
                 .aspectRatio(contentMode: .fill)
                 .frame(width: 300, height: 110, alignment: .top)
         }
-            .padding(.horizontal, 20) //default recommended of 16
-            .padding(.top, 20)
-            .frame(width: 340.0, height: 220.0)
-            .background(Color.black)
-            .cornerRadius(20)
-            .shadow(radius: 20)
     }
 }
 
@@ -137,8 +157,6 @@ struct BackCardView: View {
         VStack {
             Spacer()
         }
-            /// Orde of modifyiersr is very imporant!
-            .frame(width: 340.0, height: 220.0)
     }
 }
 
@@ -177,6 +195,5 @@ struct BottomCardView: View {
             .background(Color.white)
             .cornerRadius(30)
             .shadow(radius: 20)
-            .offset(x: 0, y: 500.0)
     }
 }
