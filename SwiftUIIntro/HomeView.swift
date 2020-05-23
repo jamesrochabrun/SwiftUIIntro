@@ -14,14 +14,18 @@
  - when using scrollviews: the scrolliview direction does not define the layout , you need to deifne it using a H or V stack
  
   Double(geometry.frame(in: .global).minX) means :: gets the frame value of the card = self.view.frame.minX
+ - shadows need to be applied after clipping shapes.
  */
 
 import SwiftUI
 
 struct HomeView: View {
     
-    /// Bindings
+    //MARK:- Bindings
     @Binding var showProfile: Bool
+    
+    // MARK:- States
+    @State var showUpdate = false
     
     var body: some View {
         VStack {
@@ -30,6 +34,23 @@ struct HomeView: View {
                     .font(.system(size: 28, weight: .bold))
                 Spacer()
                 AvatarView(showProfile: $showProfile)
+                
+                Button(action: {
+                    self.showUpdate.toggle()
+                }) {
+                    Image(systemName: "bell")
+                        .renderingMode(.original)
+                        .font(.system(size: 16, weight: .medium))
+                        .frame(width: 36, height: 36)
+                        .background(Color.white)
+                        .clipShape(Circle())
+                        .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1)
+                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 10)
+                }
+                    /// Modal presentations
+                    .sheet(isPresented: $showUpdate) {
+                        ContentView()
+                }
             }
             .padding(.horizontal)
             .padding(.leading, 14) /// adding the extra 14 (default to 16 + 14 = 30 which is the origin of the  scrollview)
