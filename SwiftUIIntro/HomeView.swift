@@ -49,7 +49,7 @@ struct HomeView: View {
                 }
                     /// Modal presentations
                     .sheet(isPresented: $showUpdate) {
-                        ContentView()
+                        UpdateList()
                 }
             }
             .padding(.horizontal)
