@@ -12,9 +12,9 @@ struct UpdateList: View {
     
     var body: some View {
         NavigationView { // navigation controller
-            List(updateDate) { update in
-                /// UI that we want to presnt
-                NavigationLink(destination: Text(update.text)) {
+            List(updateData) { update in
+                /// UI that we want to present
+                NavigationLink(destination: UpdateDetail(update: update)) {
                     
                     /// cells
                     HStack {
@@ -66,6 +66,6 @@ struct Update: Identifiable {
     var date: String
 }
 
-let updateDate = [
+let updateData = [
     Update(image: "Card1", title: "Swift UI", text: "some text more than 2 lines what can i say", date: "may 25")
 ]
