@@ -27,10 +27,6 @@ struct TabBar: View {
         }
         .edgesIgnoringSafeArea(.top)
     }
-    
-//    func buildTabItem(_ title: String, image: String) -> TupleView<Text> {
-//        
-//    }
 }
 
 struct TabBar_Previews: PreviewProvider {
