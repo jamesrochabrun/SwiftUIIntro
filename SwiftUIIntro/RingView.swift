@@ -11,15 +11,19 @@ import SwiftUI
 ///**
 ///  .trim `from` 0.2 represents the 80 % and so on
 ///
+///  Modifyers: when a modifyier is applied to a container it is applied to all its childrens, but when a children has  a modifyer it will have PRIORITY
+///
 ///*/
 
 struct RingView: View {
     
-    let color1 = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
-    let color2 = #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)
-    let width: CGFloat = 300.0
-    let heigth: CGFloat = 300.0
-    let percentage: CGFloat = 44
+    var color1 = #colorLiteral(red: 0.8078431487, green: 0.02745098062, blue: 0.3333333433, alpha: 1)
+    var color2 = #colorLiteral(red: 0.3647058904, green: 0.06666667014, blue: 0.9686274529, alpha: 1)
+    var width: CGFloat = 300.0
+    var heigth: CGFloat = 300.0
+    var percentage: CGFloat = 44
+    
+    @Binding var show: Bool
     
     var body: some View {
         /// Declaring variables inside the body like view did load?
@@ -32,7 +36,7 @@ struct RingView: View {
                 .stroke(Color.black.opacity(0.1), style: StrokeStyle(lineWidth: 5 * multiplier))
                 .frame(width: width, height: heigth)
             Circle()
-                .trim(from: progress, to: 1)
+                .trim(from: show ? progress : 1, to: 1)
                 .stroke(
                     LinearGradient(gradient: Gradient(colors: [Color(color1), Color(color2)]), startPoint: .topTrailing, endPoint: .bottomLeading),
                     style: StrokeStyle(lineWidth: 5 * multiplier, lineCap: .round, lineJoin: .round, miterLimit: .infinity, dash: [20, 0], dashPhase: 0)
@@ -45,12 +49,18 @@ struct RingView: View {
             Text("\(Int(percentage)) %")
                 .font(.system(size: 14 * multiplier))
                 .fontWeight(.bold)
+                .onTapGesture {
+                    self.show.toggle()
+            }
         }
     }
 }
 
+//**/
+
 struct RingView_Previews: PreviewProvider {
     static var previews: some View {
-        RingView()
+        /// Default value to satisfy the preview Because of the Binding.
+        RingView(show: .constant(true))
     }
 }
