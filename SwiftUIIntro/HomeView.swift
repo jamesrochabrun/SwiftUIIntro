@@ -53,25 +53,14 @@ struct HomeView: View {
                 }
             }
             .padding(.horizontal)
-            .padding(.leading, 14) /// adding the extra 14 (default to 16 + 14 = 30 which is the origin of the  scrollview)
-            .padding(.top, 30)
+                .padding(.leading, 14) /// adding the extra 14 (default to 16 + 14 = 30 which is the origin of the  scrollview)
+                .padding(.top, 30)
             
-            HStack(spacing: 12.0) {
-                RingView(color1: #colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1), color2: #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1), width: 44, heigth: 44, percentage: 68, show: .constant(true))
-                    .animation(Animation.easeInOut.delay(0.3))
-                VStack {
-                    Text("6 minutes left")
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                    Text("Watched 10 min")
-                        .font(.caption)
-                }
+            ScrollView(.horizontal, showsIndicators: false) {
+                WatchRingsView()
+                    .padding(.horizontal, 30)
+                    .padding(.bottom, 30) // this will help with the shadow!!!
             }
-            .padding(8)
-            .background(Color.white)
-            .cornerRadius(20)
-            .shadow(color: Color.black.opacity(0.2), radius: 20, x: 0, y: 20)
-            .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1)
             
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 30) {
@@ -157,3 +146,43 @@ let sectionData = [
 
 
 
+
+struct WatchRingsView: View {
+    var body: some View {
+        HStack(spacing: 30) {
+            HStack(spacing: 12.0) {
+                RingView(color1: #colorLiteral(red: 0.1764705926, green: 0.01176470611, blue: 0.5607843399, alpha: 1), color2: #colorLiteral(red: 0.7450980544, green: 0.1568627506, blue: 0.07450980693, alpha: 1), width: 44, heigth: 44, percentage: 68, show: .constant(true))
+                    .animation(Animation.easeInOut.delay(0.3))
+                VStack {
+                    // Bold should be applied before the modifier
+                    Text("6 minutes left").bold().modifier(FontModifier(style: .subheadline))
+                    Text("Watched 10 min").modifier(FontModifier(style: .caption))
+                }
+                //            .modifier(FontModifier())
+            }
+            .padding(8)
+            .background(Color.white)
+            .cornerRadius(20)
+            .modifier(ShadowModifier())
+            
+            HStack(spacing: 12.0) {
+                RingView(color1: #colorLiteral(red: 0.7254902124, green: 0.4784313738, blue: 0.09803921729, alpha: 1), color2: #colorLiteral(red: 0.9372549057, green: 0.3490196168, blue: 0.1921568662, alpha: 1), width: 32, heigth: 32, percentage: 45, show: .constant(true))
+                    .animation(Animation.easeInOut.delay(0.3))
+            }
+            .padding(8)
+            .background(Color.white)
+            .cornerRadius(20)
+            .modifier(ShadowModifier())
+            
+            
+            HStack(spacing: 12.0) {
+                RingView(color1: #colorLiteral(red: 0.2745098174, green: 0.4862745106, blue: 0.1411764771, alpha: 1), color2: #colorLiteral(red: 0.1019607857, green: 0.2784313858, blue: 0.400000006, alpha: 1), width: 32, heigth: 32, percentage: 50, show: .constant(true))
+                    .animation(Animation.easeInOut.delay(0.3))
+            }
+            .padding(8)
+            .background(Color.white)
+            .cornerRadius(20)
+            .modifier(ShadowModifier())
+        }
+    }
+}
