@@ -20,24 +20,59 @@ import SwiftUI
  - passign states trough components:
     1 - create a Binding variable in the component
     2 -  pass the state to the binding prefixing with $
+ 
+ -  Using bindings and states, child can contain a Binding that can change with a gesture, if parent has a State and is passed as the binding of the child it will act like a delegate'ish.
+ 
+ for example `HomeView` has a `@Binding var showContent: Bool`
+ and `Home` has `    @State var showContent = false`
+ Then we need to `HomeView(showProfile: $showProfile, showContent: $showContent)` to bind the state
+ 
+ /// Addign a backgorund view to a view just need `Color.black.edgesIgnoringSafeArea(.all)`
+`
+ `Transitions`
+ 
+ will only work if there is no backgorund like:
+ 
+ ```
+ Color(#colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1))
+           /// Disabling safe arears
+               .edgesIgnoringSafeArea(.all)
+ 
+ or
+ 
+ .background(Color.white) inside `HomeView
+
+ ```
+ 
+ .transition(.move(edge: .top))
+ .animation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0))
  */
 
 struct Home: View {
     
     @State var showProfile = false
     @State var viewState: CGSize = .zero
+    @State var showContent = false
+
     
     var body: some View {
         
         ZStack {
             
             Color(#colorLiteral(red: 0.6000000238, green: 0.6000000238, blue: 0.6000000238, alpha: 1))
-            /// Disabling safe arears
+                /// Disabling safe arears
                 .edgesIgnoringSafeArea(.all)
             
-          HomeView(showProfile: $showProfile)
+            HomeView(showProfile: $showProfile, showContent: $showContent)
                 .padding(.top, 44) /// 44 is been used here as the status bar height. ?? not cool will be a problem in iphone 8 with no notches.
-                .background(Color.white)
+                .background(
+                    VStack {
+                        LinearGradient(gradient: Gradient(colors: [Color("background2"), Color.white]), startPoint: .top, endPoint: .bottom)
+                            .frame(height: 200)
+                        Spacer()
+                    }
+                    .background(Color.white)
+            )
                 .clipShape(RoundedRectangle(cornerRadius: 30, style: .continuous))
                 .shadow(color: Color.black.opacity(0.2), radius: 20, x: 20, y: 20)
                 .offset(y: showProfile ? -450 : 0)
@@ -69,6 +104,32 @@ struct Home: View {
                     
                 }
             )
+            
+            /// If statetmet  in Swift UI
+            if showContent {
+                /// Adding a background view
+                Color.white.edgesIgnoringSafeArea(.all)
+                ContentView()
+                VStack { /// Trick for placing a button in the top right corner!
+                    
+                    HStack {
+                        Spacer()
+                        Image(systemName: "xmark")
+                            .frame(width: 36, height: 36)
+                            .foregroundColor(.white)
+                            .background(Color.black)
+                            .clipShape(Circle())
+                    }
+                    Spacer()
+                }
+                .offset(x: -16, y: 16)
+                    // Animating transitions!
+                    .transition(.move(edge: .top))
+                    .animation(.spring(response: 0.6, dampingFraction: 0.8, blendDuration: 0))
+                .onTapGesture {
+                    self.showContent = false
+                }
+            }
         }
     }
 }

@@ -23,68 +23,88 @@ struct HomeView: View {
     
     //MARK:- Bindings
     @Binding var showProfile: Bool
+    @Binding var showContent: Bool
     
     // MARK:- States
     @State var showUpdate = false
     
     var body: some View {
-        VStack {
-            HStack {
-                Text("Watching")
-                    .font(.system(size: 28, weight: .bold))
-                Spacer()
-                AvatarView(showProfile: $showProfile)
-                
-                Button(action: {
-                    self.showUpdate.toggle()
-                }) {
-                    Image(systemName: "bell")
-                        .renderingMode(.original)
-                        .font(.system(size: 16, weight: .medium))
-                        .frame(width: 36, height: 36)
-                        .background(Color.white)
-                        .clipShape(Circle())
-                        .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1)
-                        .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 10)
-                }
-                    /// Modal presentations
-                    .sheet(isPresented: $showUpdate) {
-                        UpdateList()
-                }
-            }
-            .padding(.horizontal)
-                .padding(.leading, 14) /// adding the extra 14 (default to 16 + 14 = 30 which is the origin of the  scrollview)
-                .padding(.top, 30)
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                WatchRingsView()
-                    .padding(.horizontal, 30)
-                    .padding(.bottom, 30) // this will help with the shadow!!!
-            }
-            
-            ScrollView(.horizontal, showsIndicators: false) {
-                HStack(spacing: 30) {
-                    ForEach(sectionData) { item in
-                        GeometryReader { geometry in
-                            SectionView(section: item)
-                                /// One cool trick to avoid the rotation in the first card is substracting the spacing hard coded value that comes from the padding
-                                .rotation3DEffect(Angle(degrees: Double(geometry.frame(in: .global).minX - 30) / -20), /// negative or positive changes the animation
-                                                        axis: (x: 0, y: 10.0, z: 0)) // setting the axis values to 0 disables the movement in that angle
-                        }
-                        .frame(width: 275, height: 275)
+        ScrollView {
+            VStack {
+                HStack {
+                    Text("Watching")
+                        .font(.system(size: 28, weight: .bold))
+                    Spacer()
+                    AvatarView(showProfile: $showProfile)
+                    
+                    Button(action: {
+                        self.showUpdate.toggle()
+                    }) {
+                        Image(systemName: "bell")
+                            .renderingMode(.original)
+                            .font(.system(size: 16, weight: .medium))
+                            .frame(width: 36, height: 36)
+                            .background(Color.white)
+                            .clipShape(Circle())
+                            .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1)
+                            .shadow(color: Color.black.opacity(0.2), radius: 10, x: 0, y: 10)
+                    }
+                        /// Modal presentations
+                        .sheet(isPresented: $showUpdate) {
+                            UpdateList()
                     }
                 }
-                .padding(30)
-                .padding(.bottom, 30) // will help the bottom drop shadow be more visible
+                .padding(.horizontal)
+                    .padding(.leading, 14) /// adding the extra 14 (default to 16 + 14 = 30 which is the origin of the  scrollview)
+                    .padding(.top, 30)
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    WatchRingsView()
+                        .padding(.horizontal, 30)
+                        .padding(.bottom, 30) // this will help with the shadow!!!
+                        .onTapGesture {
+                            self.showContent = true
+                    }
+                }
+                
+                ScrollView(.horizontal, showsIndicators: false) {
+                    HStack(spacing: 30) {
+                        ForEach(sectionData) { item in
+                            GeometryReader { geometry in
+                                SectionView(section: item)
+                                    /// One cool trick to avoid the rotation in the first card is substracting the spacing hard coded value that comes from the padding
+                                    .rotation3DEffect(Angle(degrees: Double(geometry.frame(in: .global).minX - 30) / -20), /// negative or positive changes the animation
+                                                            axis: (x: 0, y: 10.0, z: 0)) // setting the axis values to 0 disables the movement in that angle
+                            }
+                            .frame(width: 275, height: 275)
+                        }
+                    }
+                    .padding(30)
+                    .padding(.bottom, 30) // will help the bottom drop shadow be more visible
+                }
+                .offset(y: -30)
+                
+                HStack {
+                    Text("Courses")
+                        .font(.title).bold()
+                    Spacer()
+                }
+                .padding(.leading, 30)
+                .offset(y: -60)
+                
+                /// Adding an item from the datasource.
+                SectionView(section: sectionData[2], width: screen.width - 60, height: 275)
+                .offset(y: -60)
+                
+                Spacer()
             }
-            Spacer()
         }
     }
 }
 
 struct HomeView_Previews: PreviewProvider {
     static var previews: some View {
-        HomeView(showProfile: .constant(false))
+        HomeView(showProfile: .constant(false), showContent: .constant(false))
     }
 }
 
@@ -92,6 +112,8 @@ struct SectionView: View {
     
     /// Dependency injection
     var section: Section
+    var width: CGFloat = 275
+    var height: CGFloat = 275
     
     var body: some View {
         VStack {
@@ -115,7 +137,7 @@ struct SectionView: View {
         }
         .padding(.top, 20)
         .padding(.horizontal, 20)
-        .frame(width: 275, height: 275)
+        .frame(width: width, height: height)
         .background(section.color)
         .cornerRadius(30)
             // contextual shadow
